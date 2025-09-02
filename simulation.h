@@ -3,15 +3,15 @@
 #include "team.h"
 
 class Simulation {
-    Team* teamA;
-    Team* teamB;
-    bool over = false;
-    Team* winner = nullptr;
+    Team* teamA;      // wskaźnik na drużynę A
+    Team* teamB;      // wskaźnik na drużynę B
+    bool over = false;      // czy symulacja zakończona
+    Team* winner = nullptr; // wskaźnik na zwycięzcę
 
 public:
-    Simulation(Team* a, Team* b) : teamA(a), teamB(b) {}
+    Simulation(Team* a, Team* b) : teamA(a), teamB(b) {} // konstruktor
 
-    void executeRound() {
+    void executeRound() { // wykonuje jedną rundę walki
         if (isOver()) return;
         teamA->attack(teamB);
         teamB->attack(teamA);
@@ -27,11 +27,11 @@ public:
         }
     }
 
-    bool isOver() const {
+    bool isOver() const { // czy symulacja zakończona
         return over || (!teamA->isAlive() || !teamB->isAlive());
     }
 
-    Team* getWinner() const {
+    Team* getWinner() const { // zwraca zwycięzcę
         if (!over) {
             if (teamA->isAlive() && !teamB->isAlive()) return teamA;
             if (teamB->isAlive() && !teamA->isAlive()) return teamB;

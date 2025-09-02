@@ -5,13 +5,13 @@
 #include "creature.h"
 
 class Team {
-    std::vector<Creature*> creatures;
+    std::vector<Creature*> creatures; // lista wskaźników na stworzenia
 public:
-    void add(Creature* c) {
+    void add(Creature* c) { // dodaje stworzenie do drużyny
         creatures.push_back(c);
     }
 
-    std::vector<Creature*> getLivingCreatures() const {
+    std::vector<Creature*> getLivingCreatures() const { // zwraca żywe stworzenia
         std::vector<Creature*> living;
         for (auto c : creatures) {
             if (c->isAlive()) living.push_back(c);
@@ -19,14 +19,14 @@ public:
         return living;
     }
 
-    Creature* getDefender() const {
+    Creature* getDefender() const { // zwraca pierwszego żywego obrońcę
         for (auto c : creatures) {
             if (c->isAlive()) return c;
         }
         return nullptr;
     }
 
-    void attack(Team* other) {
+    void attack(Team* other) { // atakuje drużynę przeciwną (tylko ten sam typ)
         auto attackers = getLivingCreatures();
         auto defenders = other->getLivingCreatures();
         size_t n = std::min(attackers.size(), defenders.size());
@@ -37,14 +37,14 @@ public:
         }
     }
 
-    bool isAlive() const {
+    bool isAlive() const { // czy drużyna żyje
         for (auto c : creatures) {
             if (c->isAlive()) return true;
         }
         return false;
     }
 
-    std::string toString() const {
+    std::string toString() const { // opis drużyny jako string
         std::ostringstream oss;
         oss << "Team(";
         for (size_t i = 0; i < creatures.size(); ++i) {

@@ -6,18 +6,18 @@
 #include <iostream>
 #include <cmath>
 
-class Vampire : public Human, public Bat {
+class Vampire : public Human, public Bat { // klasa Vampire dziedziczy po Human i Bat
 public:
     Vampire(const std::string& name, const std::string& occupation, int wingspan, int flightSpeed)
-        : Creature(name, 1000), Human(name, occupation, 1897), Bat(name, wingspan, flightSpeed) {}
+        : Creature(name, 1000), Human(name, occupation, 1897), Bat(name, wingspan, flightSpeed) {} // konstruktor
 
-    void introduce() const override {
+    void introduce() const override { // wypisuje informacje o wampirze
         Human::introduce();
         Bat::introduce();
         std::cout << "I am a vampire." << std::endl;
     }
 
-    void attack(Creature* target) override {
+    void attack(Creature* target) override { // atakuje inne stworzenia
         Human* humanTarget = dynamic_cast<Human*>(target);
         if (humanTarget) {
             if (humanTarget->getHealthPercentage() > 50) {
@@ -36,7 +36,7 @@ public:
         }
     }
 
-    std::string toString() const override {
+    std::string toString() const override { // zwraca opis wampira jako string
         std::ostringstream oss;
         oss << "Vampire(" << Creature::toString()
             << ", " << Human::toString()
