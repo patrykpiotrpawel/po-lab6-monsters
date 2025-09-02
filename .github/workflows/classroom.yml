@@ -1,0 +1,80 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: make test_simulation
+      id: make-test_simulation
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: make test_simulation
+        setup-command: ''
+        command: make test_simulation
+        timeout: 10
+        max-score: 30
+    - name: make test_team
+      id: make-test_team
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: make test_team
+        setup-command: ''
+        command: make test_team
+        timeout: 10
+        max-score: 30
+    - name: make test_vampire
+      id: make-test_vampire
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: make test_vampire
+        setup-command: ''
+        command: make test_vampire
+        timeout: 10
+        max-score: 10
+    - name: make test_human
+      id: make-test_human
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: make test_human
+        setup-command: ''
+        command: make test_human
+        timeout: 10
+        max-score: 10
+    - name: make test_bat
+      id: make-test_bat
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: make test_bat
+        setup-command: ''
+        command: make test_bat
+        timeout: 10
+        max-score: 10
+    - name: make test_creature
+      id: make-test_creature
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: make test_creature
+        setup-command: ''
+        command: make test_creature
+        timeout: 10
+        max-score: 10
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        MAKE-TEST_SIMULATION_RESULTS: "${{steps.make-test_simulation.outputs.result}}"
+        MAKE-TEST_TEAM_RESULTS: "${{steps.make-test_team.outputs.result}}"
+        MAKE-TEST_VAMPIRE_RESULTS: "${{steps.make-test_vampire.outputs.result}}"
+        MAKE-TEST_HUMAN_RESULTS: "${{steps.make-test_human.outputs.result}}"
+        MAKE-TEST_BAT_RESULTS: "${{steps.make-test_bat.outputs.result}}"
+        MAKE-TEST_CREATURE_RESULTS: "${{steps.make-test_creature.outputs.result}}"
+      with:
+        runners: make-test_simulation,make-test_team,make-test_vampire,make-test_human,make-test_bat,make-test_creature
