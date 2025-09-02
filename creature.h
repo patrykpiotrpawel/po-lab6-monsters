@@ -1,42 +1,53 @@
-#ifndef CREATURE_H
-#define CREATURE_H 
-#include <iostream>
+#pragma once
 #include <string>
+#include <iostream>
+#include <sstream>
 
 class Creature {
-    protected:                  //pola przechowujące
-        std::string name;  // nazwa stworzenia
-        int health;        // aktualne zdrowie
-        int maxHealth;     // maksymalne zdrowie
-
+    std::string name;
+    int health;
+    int maxHealth;
 public:
-    Creature(const std::string& name, int maxHealth)
-        : name(name), health(maxHealth), maxHealth(maxHealth) {} //inicjalizacja name, health i maxHealth
+    Creature(const std::string& name, int maxHealth = 100)
+        : name(name), health(maxHealth), maxHealth(maxHealth) {}
 
-void decreaseHealth(int amount) { 
-    health -= amount;  // zmniejszenie zdrowia
-    if (health < 0) health = 0; //zdrowie nie spadnie ponizej 0
-}
+    virtual ~Creature() = default;
 
-bool isAlive() const { 
-    return health > 0; //true jesli zdrowie > 0
-}
+    virtual void introduce() const {
+        std::cout << "I am Creature named " << name << " and I have " << getHealthPercentage() << "% of health.\n";
+    }
 
-int getHealthPercentage() const {       //zwracanie procent zdrowia
-    return (health * 100) / maxHealth;  //procent zdrowia z aktualnego i maksymalnego
-}
+    virtual void attack(Creature* /*opponent*/) {}
 
-int getMaxHealth() const {
-    return maxHealth;
-}
+    virtual std::string toString() const {
+        std::ostringstream oss;
+        oss << "Creature(name: " << name << ", health: " << health << ", maxHealth: " << maxHealth << ")";
+        return oss.str();
+    }
 
-//DEKLARACJE
+    void decreaseHealth(int amount) {
+        health -= amount;
+        if (health < 0) health = 0;
+    }
 
-virtual void introduce() const = 0;            // wprowadzenie stworzenia
-virtual std::string toString() const = 0;      // zwracanie opisu stworzenia
-virtual void attack(Creature* opponent) = 0;   // atak na przeciwnika
-virtual ~Creature() = default;                 // usuwanie obiektow pochodnych
+    int getHealthPercentage() const {
+        if (maxHealth == 0) return 0;
+        return (health * 100) / maxHealth;
+    }
 
+    int getMaxHealth() const {
+        return maxHealth;
+    }
+
+    int getHealth() const {
+        return health;
+    }
+
+    bool isAlive() const {
+        return health > 0;
+    }
+
+    std::string getName() const {
+        return name;
+    }
 };
-
-#endif 

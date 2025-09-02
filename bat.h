@@ -1,32 +1,34 @@
-#ifndef BAT_H
-#define BAT_H
-
+#pragma once
 #include "creature.h"
+#include <string>
+#include <sstream>
+#include <iostream>
 
-class Bat : public Creature {  // bat dziedziczy po klasie Creature
-private:               //pola przechowujace
-    int wingSpan;
+class Bat : public virtual Creature {
+    int wingspan;
     int flightSpeed;
-
 public:
-    Bat(const std::string& name, int wingSpan, int flightSpeed)
-        : Creature(name, 40), wingSpan(wingSpan), flightSpeed(flightSpeed) {} //inicjalizacja pol, maxHealth = 40
+    Bat(const std::string& name, int wingspan, int flightSpeed)
+        : Creature(name, 40), wingspan(wingspan), flightSpeed(flightSpeed) {}
 
     void introduce() const override {
-        std::cout << "I am a bat with wingspan " << wingSpan << " and flight speed " << flightSpeed << "." << std::endl; //wyswietlenie infor
+        Creature::introduce();
+        std::cout << "I am a bat with wingspan " << wingspan << " and flight speed " << flightSpeed << ".\n";
+    }
+
+    void attack(Creature* target) override {
+        target->decreaseHealth(static_cast<int>(getMaxHealth() * 0.13));
     }
 
     std::string toString() const override {
-        return "Bat: " + name; //zwrocenie opisu
+        std::ostringstream oss;
+        oss << "Bat(" << Creature::toString()
+            << ", wingspan: " << wingspan
+            << ", flightSpeed: " << flightSpeed << ")";
+        return oss.str();
     }
 
-    void changeFlightSpeed(int speed) {  //metoda zmieniajaca predkosc lotu
-        flightSpeed = speed; // nowa wartosc predkosci lotu
-    }
-
-    void attack(Creature* opponent) override {  //metoda attack z klasy creature
-        opponent->decreaseHealth(5);   // zmiejszenie zdrowia po ataku nietoperza -5
+    void changeFlightSpeed(int newSpeed) {
+        flightSpeed = newSpeed;
     }
 };
-
-#endif

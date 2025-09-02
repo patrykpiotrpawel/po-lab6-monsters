@@ -1,66 +1,58 @@
-#ifndef TEAM_H
-#define TEAM_H
-
-#include "creature.h"
+#pragma once
 #include <vector>
-#include <memory>
+#include <string>
+#include <sstream>
+#include "creature.h"
 
 class Team {
-private:
-    std::vector<std::unique_ptr<Creature>> creatures;
-
+    std::vector<Creature*> creatures;
 public:
-    void add(Creature* creature) {
-        creatures.emplace_back(creature);
+    void add(Creature* c) {
+        creatures.push_back(c);
     }
 
     std::vector<Creature*> getLivingCreatures() const {
         std::vector<Creature*> living;
-        for (const auto& creature : creatures) {
-            if (creature->isAlive()) {
-                living.push_back(creature.get());
-            }
+        for (auto c : creatures) {
+            if (c->isAlive()) living.push_back(c);
         }
         return living;
     }
 
     Creature* getDefender() const {
-        for (const auto& creature : creatures) {
-            if (creature->isAlive()) {
-                return creature.get();
-            }
+        for (auto c : creatures) {
+            if (c->isAlive()) return c;
         }
         return nullptr;
     }
 
-    void attack(Team* otherTeam) {
-        Creature* defender = otherTeam->getDefender();
-        if (defender) {
-            for (const auto& attacker : creatures) {
-                if (attacker->isAlive()) {
-                    attacker->attack(defender);
-                    if (!defender->isAlive()) break;
-                }
+    void attack(Team* other) {
+        auto attackers = getLivingCreatures();
+        auto defenders = other->getLivingCreatures();
+        size_t n = std::min(attackers.size(), defenders.size());
+        for (size_t i = 0; i < n; ++i) {
+            if (typeid(*attackers[i]) == typeid(*defenders[i])) {
+                attackers[i]->attack(defenders[i]);
             }
         }
     }
 
-    bool isAtLeastOneAliveMember() const {
-        for (const auto& creature : creatures) {
-            if (creature->isAlive()) {
-                return true;
-            }
+    bool isAlive() const {
+        for (auto c : creatures) {
+            if (c->isAlive()) return true;
         }
         return false;
     }
 
     std::string toString() const {
-        std::string result = "Team:\n";
-        for (const auto& creature : creatures) {
-            result += creature->toString() + "\n";
+        std::ostringstream oss;
+        oss << "Team(";
+        for (size_t i = 0; i < creatures.size(); ++i) {
+            oss << creatures[i]->toString();
+            if (i + 1 < creatures.size())
+                oss << ", ";
         }
-        return result;
+        oss << ")";
+        return oss.str();
     }
 };
-
-#endif

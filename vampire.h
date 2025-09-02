@@ -1,32 +1,46 @@
-#ifndef VAMPIRE_H
-#define VAMPIRE_H
+#pragma once
 
+#include "human.h"
 #include "bat.h"
+#include <string>
+#include <iostream>
+#include <cmath>
 
-class Vampire : public Bat {
-private:
-    std::string occupation;
-
+class Vampire : public Human, public Bat {
 public:
-    Vampire(const std::string& name, const std::string& occupation, int wingSpan, int flightSpeed)
-        : Bat(name, wingSpan, flightSpeed), occupation(occupation) {}
+    Vampire(const std::string& name, const std::string& occupation, int wingspan, int flightSpeed)
+        : Creature(name, 1000), Human(name, occupation, 1897), Bat(name, wingspan, flightSpeed) {}
 
     void introduce() const override {
-        std::cout << "I am a vampire, my occupation is " << occupation << "." << std::endl;
+        Human::introduce();
+        Bat::introduce();
+        std::cout << "I am a vampire." << std::endl;
     }
 
-    void suckBlood() {
-        health += 10;
-        if (health > maxHealth) health = maxHealth;
+    void attack(Creature* target) override {
+        Human* humanTarget = dynamic_cast<Human*>(target);
+        if (humanTarget) {
+            if (humanTarget->getHealthPercentage() > 50) {
+                humanTarget->decreaseHealth(static_cast<int>(humanTarget->getMaxHealth() * 0.1));
+            } else {
+                humanTarget->decreaseHealth(humanTarget->getMaxHealth());
+            }
+        } else {
+            if (target->getHealthPercentage() > 50) {
+                target->decreaseHealth(static_cast<int>(target->getMaxHealth() * 0.25));
+            } else {
+                int expectedHP = static_cast<int>(std::round(target->getMaxHealth() * 0.22));
+                int toDecrease = target->getHealth() - expectedHP;
+                target->decreaseHealth(toDecrease);
+            }
+        }
     }
 
     std::string toString() const override {
-        return "Vampire: " + name;
-    }
-
-    void attack(Creature* opponent) override {
-        opponent->decreaseHealth(10);
+        std::ostringstream oss;
+        oss << "Vampire(" << Creature::toString()
+            << ", " << Human::toString()
+            << ", " << Bat::toString() << ")";
+        return oss.str();
     }
 };
-
-#endif

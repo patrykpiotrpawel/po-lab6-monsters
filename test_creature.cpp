@@ -7,7 +7,7 @@ class Monster : public Creature {
 public:
     Monster(std::string name, int maxHealth) : Creature(name, maxHealth) {}
 
-    void introduce() override {
+    void introduce() const override {
         Creature::introduce();
     }
 
@@ -15,7 +15,7 @@ public:
         opponent->decreaseHealth(10); // Example attack logic
     }
 
-    std::string toString() override {
+    std::string toString() const override {
         return Creature::toString();
     }
 };
