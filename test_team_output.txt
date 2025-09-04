@@ -1,0 +1,68 @@
+g++ -Wall --std=c++17 test_team.cpp team.cpp creature.cpp bat.cpp human.cpp vampire.cpp catch_amalgamated.cpp -o test_team.o
+./test_team.o
+Randomness seeded to: 108884820
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+test_team.o is a Catch2 v3.2.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+Team toString method
+-------------------------------------------------------------------------------
+test_team.cpp:159
+...............................................................................
+
+test_team.cpp:184: FAILED:
+  REQUIRE( team.toString() == expected )
+with expansion:
+  "Team(Vampire(Creature(name: Dracula, health: 1000, maxHealth: 1000), Human
+  (Creature(name: Dracula, health: 1000, maxHealth: 1000), occupation: Count,
+  bornYear: 1897), Bat(Creature(name: Dracula, health: 1000, maxHealth: 1000),
+  wingspan: 15, flightSpeed: 25)), Vampire(Creature(name: Nosferatu, health:
+  1000, maxHealth: 1000), Human(Creature(name: Nosferatu, health: 1000,
+  maxHealth: 1000), occupation: Noble, bornYear: 1897), Bat(Creature(name:
+  Nosferatu, health: 1000, maxHealth: 1000), wingspan: 12, flightSpeed: 22)),
+  Human(Creature(name: John Doe, health: 100, maxHealth: 100), occupation:
+  Engineer, bornYear: 1990), Human(Creature(name: Jane Doe, health: 100,
+  maxHealth: 100), occupation: Doctor, bornYear: 1985), Bat(Creature(name:
+  Batty, health: 40, maxHealth: 40), wingspan: 10, flightSpeed: 20), Bat
+  (Creature(name: Flappy, health: 40, maxHealth: 40), wingspan: 8, flightSpeed:
+  18), Vampire(Creature(name: Lestat, health: 1000, maxHealth: 1000), Human
+  (Creature(name: Lestat, health: 1000, maxHealth: 1000), occupation: Prince,
+  bornYear: 1897), Bat(Creature(name: Lestat, health: 1000, maxHealth: 1000),
+  wingspan: 14, flightSpeed: 24)), Human(Creature(name: Alice, health: 100,
+  maxHealth: 100), occupation: Scientist, bornYear: 1988), Bat(Creature(name:
+  Screech, health: 40, maxHealth: 40), wingspan: 9, flightSpeed: 19), Vampire
+  (Creature(name: Vlad, health: 1000, maxHealth: 1000), Human(Creature(name:
+  Vlad, health: 1000, maxHealth: 1000), occupation: Warrior, bornYear: 1897),
+  Bat(Creature(name: Vlad, health: 1000, maxHealth: 1000), wingspan: 16,
+  flightSpeed: 26)))"
+  ==
+  "Team(Vampire(Creature(name: Dracula, health: 1000, maxHealth: 1000), Human
+  (Creature(name: Dracula, health: 1000, maxHealth: 1000), occupation: Count,
+  bornYear: 1897), Bat(Creature(name: Dracula, health: 1000, maxHealth: 1000),
+  wingspan: 15, flightSpeed: 25)), Vampire(Creature(name: Nosferatu, health:
+  1000, maxHealth: 1000), Human(Creature(name: Nosferatu, health: 1000,
+  maxHealth: 1000), occupation: Noble, bornYear: 1897), Bat(Creature(name:
+  Nosferatu, health: 1000, maxHealth: 1000), wingspan: 12, flightSpeed: 22)),
+  Human(Creature(name: John Doe, health: 100, maxHealth: 100), occupation:
+  Engineer, bornYear: 1990), Human(Creature(name: Jane Doe, health: 100,
+  maxHealth: 100), occupation: Doctor, bornYear: 1985), Bat(Creature(name:
+  Batty, health: 40, maxHealth: 40), wingspan: 10, flightSpeed: 20), Bat
+  (Creature(name: Flappy, health: 40, maxHealth: 40), wingspan: 8, flightSpeed:
+  18), Vampire(Creature(name: Lestat, health: 1000, maxHealth: 1000), Human
+  (Creature(name: Lestat, health: 1000, maxHealth: 1000), occupation: Prince,
+  bornYear: 1897), Bat(Creature(name: Lestat, health: 1000, maxHealth: 1000),
+  wingspan: 14, flightSpeed: 24)), Human(Creature(name: Alice, health: 100,
+  maxHealth: 100), occupation: Scientist, bornYear: 1988), Bat(Creature(name:
+  Screech, health: 40, maxHealth: 40), wingspan: 9, flightSpeed: 19), Vampire
+  (Creature(name: Vlad, health: 1000, maxHealth: 1000), Human(Creature(name:
+  Vlad, health: 1000, maxHealth: 1000), occupation: Warrior, bornYear: 1897),
+  Bat(Creature(name: Vlad, health: 1000, maxHealth: 1000), wingspan: 16,
+  flightSpeed: 26)), )"
+
+===============================================================================
+test cases: 5 | 4 passed | 1 failed
+assertions: 9 | 8 passed | 1 failed
+
+make: *** [Makefile:33: test_team] Error 1

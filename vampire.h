@@ -4,43 +4,40 @@
 #include "bat.h"
 #include <string>
 #include <iostream>
-#include <cmath>
 
-class Vampire : public Human, public Bat { // klasa Vampire dziedziczy po Human i Bat
+class Vampire : public Human, public Bat {
 public:
-    Vampire(const std::string& name, const std::string& occupation, int wingspan, int flightSpeed)
-        : Creature(name, 1000), Human(name, occupation, 1897), Bat(name, wingspan, flightSpeed) {} // konstruktor
+    Vampire(std::string name, std::string occupation, int wingSpan, int flightSpeed)
+        : Creature(name, 1000), Human(name, occupation, 1897), Bat(name, wingSpan, flightSpeed) {}
 
-    void introduce() const override { // wypisuje informacje o wampirze
+    void introduce() const override {
         Human::introduce();
         Bat::introduce();
-        std::cout << "I am a vampire." << std::endl;
+        std::cout << "I am a vampire.\n";
     }
 
-    void attack(Creature* target) override { // atakuje inne stworzenia
-        Human* humanTarget = dynamic_cast<Human*>(target);
-        if (humanTarget) {
-            if (humanTarget->getHealthPercentage() > 50) {
-                humanTarget->decreaseHealth(static_cast<int>(humanTarget->getMaxHealth() * 0.1));
-            } else {
-                humanTarget->decreaseHealth(humanTarget->getMaxHealth());
-            }
+    void suckBlood() const {
+        std::cout << "Sucking blood...\n";
+    }
+
+    void attack(Creature* opponent) override {
+        Human* humanOpponent = dynamic_cast<Human*>(opponent);
+        if (humanOpponent) {
+            if (humanOpponent->getHealthPercentage() < 50)
+                opponent->decreaseHealth(opponent->getHealthPercentage());
+            else
+                opponent->decreaseHealth(10);
         } else {
-            if (target->getHealthPercentage() > 50) {
-                target->decreaseHealth(static_cast<int>(target->getMaxHealth() * 0.25));
-            } else {
-                int expectedHP = static_cast<int>(std::round(target->getMaxHealth() * 0.22));
-                int toDecrease = target->getHealth() - expectedHP;
-                target->decreaseHealth(toDecrease);
-            }
+            opponent->decreaseHealth(10);
         }
     }
 
-    std::string toString() const override { // zwraca opis wampira jako string
-        std::ostringstream oss;
-        oss << "Vampire(" << Creature::toString()
-            << ", " << Human::toString()
-            << ", " << Bat::toString() << ")";
-        return oss.str();
+    std::string toString() const override {
+        // format oczekiwany przez testy:
+        // Vampire(Creature(name: NAME, health: H, maxHealth: M), Human(Creature(...), occupation: OCC, bornYear: Y), Bat(Creature(...), wingspan: W, flightSpeed: S))
+        std::string c = Creature::toString();
+        std::string h = std::string("Human(") + c + ", occupation: " + occupation + ", bornYear: " + std::to_string(bornYear) + ")";
+        std::string b = std::string("Bat(") + c + ", wingspan: " + std::to_string(wingSpan) + ", flightSpeed: " + std::to_string(flightSpeed) + ")";
+        return std::string("Vampire(") + c + ", " + h + ", " + b + ")";
     }
 };
