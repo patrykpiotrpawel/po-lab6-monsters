@@ -64,3 +64,40 @@ TEST_CASE("Vampire attack method on non-Human creature with health below 50%", "
     vampire.attack(&bat);
     REQUIRE(bat.getHealthPercentage() == 22);
 }
+
+TEST_CASE("Vampire introduce after health decrease", "[Vampire]") {
+    Vampire vampire("Dracula", "Count", 15, 25);
+    vampire.decreaseHealth(500);
+    std::ostringstream output;
+    std::streambuf *oldCoutBuffer = std::cout.rdbuf(output.rdbuf());
+
+    vampire.introduce();
+
+    std::cout.rdbuf(oldCoutBuffer);
+    REQUIRE(output.str().find("I am Creature named Dracula and I have 50% of health.") != std::string::npos);
+}
+
+TEST_CASE("Vampire toString after health decrease", "[Vampire]") {
+    Vampire vampire("Dracula", "Count", 15, 25);
+    vampire.decreaseHealth(400);
+    REQUIRE(vampire.toString().find("health: 600") != std::string::npos);
+}
+
+TEST_CASE("Vampire cannot decrease health below zero", "[Vampire]") {
+    Vampire vampire("Dracula", "Count", 15, 25);
+    vampire.decreaseHealth(2000);
+    REQUIRE(vampire.getHealthPercentage() == 0);
+}
+
+TEST_CASE("Vampire attack does not affect dead creature", "[Vampire]") {
+    Vampire vampire("Dracula", "Count", 15, 25);
+    Human human("John Doe", "Engineer", 1990);
+    human.decreaseHealth(100);
+    vampire.attack(&human);
+    REQUIRE(human.getHealthPercentage() == 0);
+}
+
+TEST_CASE("Vampire getAge returns correct value", "[Vampire]") {
+    Vampire vampire("Lestat", "Prince", 14, 24);
+    REQUIRE(vampire.getAge() == 128);
+}

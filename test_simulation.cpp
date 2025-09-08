@@ -176,3 +176,50 @@ TEST_CASE("Simulation 3", "[Simulation]") {
     REQUIRE(teamA3.isAlive());
     REQUIRE(sim3.getWinner() == &teamA3);
 }
+
+TEST_CASE("Simulation handles empty teams", "[Simulation]") {
+    Team teamA;
+    Team teamB;
+    Simulation sim(&teamA, &teamB);
+    REQUIRE(sim.isOver());
+    REQUIRE(sim.getWinner() == nullptr);
+}
+
+TEST_CASE("Simulation handles one empty team", "[Simulation]") {
+    Team teamA;
+    Team teamB;
+    Human john("John", "Engineer", 1990);
+    teamA.add(&john);
+    Simulation sim(&teamA, &teamB);
+    REQUIRE(sim.isOver());
+    REQUIRE(sim.getWinner() == &teamA);
+}
+
+TEST_CASE("Simulation winner is nullptr if both teams dead", "[Simulation]") {
+    Team teamA;
+    Team teamB;
+    Human john("John", "Engineer", 1990);
+    Human jane("Jane", "Doctor", 1992);
+    teamA.add(&john);
+    teamB.add(&jane);
+    john.decreaseHealth(100);
+    jane.decreaseHealth(100);
+    Simulation sim(&teamA, &teamB);
+    REQUIRE(sim.isOver());
+    REQUIRE(sim.getWinner() == nullptr);
+}
+
+TEST_CASE("Simulation executes at least one round if not over", "[Simulation]") {
+    Team teamA;
+    Team teamB;
+    Human john("John", "Engineer", 1990);
+    Human jane("Jane", "Doctor", 1992);
+    teamA.add(&john);
+    teamB.add(&jane);
+    Simulation sim(&teamA, &teamB);
+    REQUIRE(!sim.isOver());
+    sim.executeRound();
+    // Po jednej rundzie ktoś powinien mieć mniej zdrowia
+    bool healthChanged = (john.getHealthPercentage() < 100) || (jane.getHealthPercentage() < 100);
+    REQUIRE(healthChanged);
+}

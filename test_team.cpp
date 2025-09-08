@@ -33,6 +33,18 @@ TEST_CASE("Team add and getLivingCreatures methods", "[Team]") {
     REQUIRE(livingCreatures.size() == 10);
 }
 
+TEST_CASE("Team getLivingCreatures returns only alive", "[Team]") {
+    Team team;
+    Human h1("Alive", "Worker", 1990);
+    Human h2("Dead", "Worker", 1990);
+    team.add(&h1);
+    team.add(&h2);
+    h2.decreaseHealth(100);
+    auto living = team.getLivingCreatures();
+    REQUIRE(living.size() == 1);
+    REQUIRE(living[0]->toString() == h1.toString());
+}
+
 TEST_CASE("Team getDefender method", "[Team]") {
     Team team;
     Vampire vampire1("Dracula", "Count", 15, 25);
@@ -60,6 +72,14 @@ TEST_CASE("Team getDefender method", "[Team]") {
     Creature *defender = team.getDefender();
     REQUIRE(defender != nullptr);
     REQUIRE(defender->toString() == vampire1.toString());
+}
+
+TEST_CASE("Team getDefender returns nullptr if all dead", "[Team]") {
+    Team team;
+    Human h1("Dead", "Worker", 1990);
+    team.add(&h1);
+    h1.decreaseHealth(100);
+    REQUIRE(team.getDefender() == nullptr);
 }
 
 TEST_CASE("Team attack method", "[Team]") {
@@ -116,6 +136,17 @@ TEST_CASE("Team attack method", "[Team]") {
     REQUIRE(bat4.getHealthPercentage() == 100);
 }
 
+TEST_CASE("Team attack does nothing if opponent dead", "[Team]") {
+    Team team1, team2;
+    Human h1("Attacker", "Worker", 1990);
+    Human h2("Defender", "Worker", 1990);
+    team1.add(&h1);
+    team2.add(&h2);
+    h2.decreaseHealth(100);
+    team1.attack(&team2);
+    REQUIRE(h2.getHealthPercentage() == 0);
+}
+
 TEST_CASE("Team isAlive method", "[Team]") {
     Team team;
     Vampire vampire1("Dracula", "Count", 15, 25);
@@ -156,6 +187,11 @@ TEST_CASE("Team isAlive method", "[Team]") {
     REQUIRE(team.isAlive() == false);
 }
 
+TEST_CASE("Team isAlive false for empty team", "[Team]") {
+    Team team;
+    REQUIRE(team.isAlive() == false);
+}
+
 TEST_CASE("Team toString method", "[Team]") {
     Team team;
     Vampire vampire1("Dracula", "Count", 15, 25);
@@ -182,4 +218,9 @@ TEST_CASE("Team toString method", "[Team]") {
 
     std::string expected = "Team(Vampire(Creature(name: Dracula, health: 1000, maxHealth: 1000), Human(Creature(name: Dracula, health: 1000, maxHealth: 1000), occupation: Count, bornYear: 1897), Bat(Creature(name: Dracula, health: 1000, maxHealth: 1000), wingspan: 15, flightSpeed: 25)), Vampire(Creature(name: Nosferatu, health: 1000, maxHealth: 1000), Human(Creature(name: Nosferatu, health: 1000, maxHealth: 1000), occupation: Noble, bornYear: 1897), Bat(Creature(name: Nosferatu, health: 1000, maxHealth: 1000), wingspan: 12, flightSpeed: 22)), Human(Creature(name: John Doe, health: 100, maxHealth: 100), occupation: Engineer, bornYear: 1990), Human(Creature(name: Jane Doe, health: 100, maxHealth: 100), occupation: Doctor, bornYear: 1985), Bat(Creature(name: Batty, health: 40, maxHealth: 40), wingspan: 10, flightSpeed: 20), Bat(Creature(name: Flappy, health: 40, maxHealth: 40), wingspan: 8, flightSpeed: 18), Vampire(Creature(name: Lestat, health: 1000, maxHealth: 1000), Human(Creature(name: Lestat, health: 1000, maxHealth: 1000), occupation: Prince, bornYear: 1897), Bat(Creature(name: Lestat, health: 1000, maxHealth: 1000), wingspan: 14, flightSpeed: 24)), Human(Creature(name: Alice, health: 100, maxHealth: 100), occupation: Scientist, bornYear: 1988), Bat(Creature(name: Screech, health: 40, maxHealth: 40), wingspan: 9, flightSpeed: 19), Vampire(Creature(name: Vlad, health: 1000, maxHealth: 1000), Human(Creature(name: Vlad, health: 1000, maxHealth: 1000), occupation: Warrior, bornYear: 1897), Bat(Creature(name: Vlad, health: 1000, maxHealth: 1000), wingspan: 16, flightSpeed: 26)), )";
     REQUIRE(team.toString() == expected);
+}
+
+TEST_CASE("Team toString empty team", "[Team]") {
+    Team team;
+    REQUIRE(team.toString() == "Team()");
 }
